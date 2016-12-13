@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>时钟项目</title>
+		<style type="text/css">
+			#canvas{
+				/*box-shadow: 2px 2px 3px royalblue;*/
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 15%;
+				margin: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="600" height="600">你的浏览器不支持,请升级到最新的版本</canvas>
+		
+		<script type="text/javascript">
+			var canvas = document.querySelector('#canvas');
+			var a = canvas.getContext('2d');
+			
+			//平移变换,把坐标体系移动到中心
+			a.translate(300,300);
+			 draw();
+			
+			setInterval(function () {
+				//清除画布之前内容
+				a.clearRect(-300,-300,canvas.width,canvas.height)
+				
+				// 绘制
+				draw();
+			},10)
+
+           
+            
+	        // 绘制表盘
+	        function draw () {
+	        	  // 绘制底层的圆的图形
+	        	  a.beginPath();
+	        	  a.arc(0,0,300,0,2*Math.PI);
+	        	  a.closePath();
+	        	  a.fillStyle = 'darkcyan';
+	        	  a.fill();
+	        	  
+	        	  
+	        	  // 绘制时钟的时针的刻度 
+	        	  var deg = 0;
+	        	  for(var i = 0; i < 12; i ++) {
+	        	  	a.save();
+	        	  	a.rotate(deg);
+	        	  	a.beginPath();
+	        	  	a.moveTo(275,0);
+	        	  	a.lineTo(297,0);
+	        	  	a.strokeStyle = 'white';
+	        	  	a.lineCap = 'round';
+	        	  	a.lineWidth = 10;
+	        	  	a.stroke();
+	        	  	
+	        	  	
+	        	  	a.restore();
+	        	  	deg += Math.PI / 6;
+	        	  };
+	        	  
+	        	  // 绘制文字
+	        	  var arr = ['III', 'IV', 'V', 'VI', 'VII',  'VIII', 'IX', 'X', 'XI', 'XII','I', 'II'];
+	        	  var deg = 0;
+	        	  for(var i = 0; i < 12; i ++) {
+	        	  	a.save();
+	        	  	a.rotate(deg);
+	        	  	a.translate(240,0);
+	        	  	a.rotate(-deg);
+	        	  	a.font = '30px serif';
+	        	  	a.textAlign = 'center';
+	        	  	a.fillStyle = 'white';
+	        	  	
+	        	  	a.fillText(arr[i],0,10);
+	        	  	deg += Math.PI/6;
+	        	  	a.restore();
+	        	  	
+	        	  }
+	        	  
+	        	  //绘制分针的刻度
+	        	   var deg = 0;
+	        	  for(var i = 0; i < 60; i ++) {
+	        	  	if(i % 5 == 0) {
+	        	  		deg += Math.PI/30;
+	        	  		continue;
+	        	  	}
+	        	  	a.save();
+	        	  	a.rotate(deg);//绘制之前先旋转
+	        	  	a.beginPath();
+	        	  	a.moveTo(285,0);
+	        	  	a.lineTo(297,0);
+	        	  	a.lineCap = 'round';
+	        	  	a.lineWidth = 4;
+	        	  	a.strokeStyle = 'aquamarine'
+	        	  	a.stroke();
+	        	  	deg += Math.PI/30;
+	        	  	a.restore();
+	        	  };
+	        	  
+//	        	   绘制时针分针和秒针
+              //获取当前的时间
+              var now = new Date();
+              var h = now.getHours();
+              var m = now.getMinutes();
+              var s = now.getSeconds();
+              //存储状态
+              a.save();
+              // 秒针
+              a.beginPath();
+              a.rotate((s*Math.PI/30) - Math.PI/2);
+              a.moveTo(-10,0);
+              a.lineTo(200,0);
+              a.lineWidth = 3;
+              a.lineCap = 'round';
+              a.strokeStyle = 'red';
+              a.stroke();
+              
+              // 绘制分针
+              a.restore();//先提取之前保存的位置再 开始绘制
+              
+              a.save();
+              a.beginPath();
+              a.rotate(m * Math.PI/30  - (Math.PI/2) + s * Math.PI / 1800);
+              a.moveTo(-10,0);
+              a.lineTo(160,0);
+              a.strokeStyle = 'lightblue';
+              a.lineWidth = 5;
+              a.lineCap = 'round';
+              a.stroke();
+              a.restore();
+              
+              // 绘制时针
+              a.save();
+              a.beginPath();
+              a.rotate(h*Math.PI/6 + (m * Math.PI/360) - Math.PI/2);
+              a.moveTo(-10,0);
+              a.lineTo(120,0);
+              a.lineWidth = 7;
+              a.lineCap = 'round';
+              a.strokeStyle = 'darkorange';
+              a.stroke();
+              a.restore();
+	        	  
+	        	  
+	        }
+			
+		</script>
+	</body>
+</html>
